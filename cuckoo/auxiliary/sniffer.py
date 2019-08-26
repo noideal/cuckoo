@@ -55,13 +55,13 @@ class Sniffer(Auxiliary):
             pargs.extend(["-Z", user])
 
         pargs.extend(["-w", file_path])
-        pargs.extend(["host", self.machine.ip])
+        pargs.extend(["net", self.machine.ip])
 
         if self.task.options.get("sniffer.debug") != "1":
             # Do not capture Agent traffic.
             pargs.extend([
                 "and", "not", "(",
-                "host", self.machine.ip, "and",
+                "net", self.machine.ip, "and",
                 "port", "%s" % CUCKOO_GUEST_PORT,
                 ")",
             ])
@@ -69,7 +69,7 @@ class Sniffer(Auxiliary):
             # Do not capture ResultServer traffic.
             pargs.extend([
                 "and", "not", "(",
-                "host", self.machine.resultserver_ip, "and",
+                "net", self.machine.resultserver_ip, "and",
                 "port", "%s" % self.machine.resultserver_port,
                 ")",
             ])
