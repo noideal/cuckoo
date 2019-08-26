@@ -61,22 +61,16 @@ class Sniffer(Auxiliary):
             # Do not capture Agent traffic.
             pargs.extend([
                 "and", "not", "(",
-                "dst", "host", self.machine.ip, "and",
-                "dst", "port", "%s" % CUCKOO_GUEST_PORT,
-                ")", "and", "not", "(",
-                "src", "host", self.machine.ip, "and",
-                "src", "port", "%s" % CUCKOO_GUEST_PORT,
+                "host", self.machine.ip, "and",
+                "port", "%s" % CUCKOO_GUEST_PORT,
                 ")",
             ])
 
             # Do not capture ResultServer traffic.
             pargs.extend([
                 "and", "not", "(",
-                "dst", "host", self.machine.resultserver_ip, "and",
-                "dst", "port", "%s" % self.machine.resultserver_port,
-                ")", "and", "not", "(",
-                "src", "host", self.machine.resultserver_ip, "and",
-                "src", "port", "%s" % self.machine.resultserver_port,
+                "host", self.machine.resultserver_ip, "and",
+                "port", "%s" % self.machine.resultserver_port,
                 ")",
             ])
 
