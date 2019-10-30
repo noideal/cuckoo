@@ -1,10 +1,10 @@
-# Copyright (C) 2012-2013 Claudio Guarnieri.
-# Copyright (C) 2014-2018 Cuckoo Foundation.
+# Copyright (C) 2016-2019 Cuckoo Foundation.
 # This file is part of Cuckoo Sandbox - http://www.cuckoosandbox.org
 # See the file 'docs/LICENSE' for copying permission.
 
 import logging
 import os
+from stat import S_ISUID
 import subprocess
 
 from cuckoo.common.abstracts import Auxiliary
@@ -37,12 +37,12 @@ class Sniffer(Auxiliary):
                       "capture aborted", tcpdump)
             return False
 
-        # TODO: this isn't working. need to fix.
-        # mode = os.stat(tcpdump)[stat.ST_MODE]
-        # if (mode & stat.S_ISUID) == 0:
-        #    log.error("Tcpdump is not accessible from this user, "
-        #              "network capture aborted")
-        #    return
+        # Check that tcpdump has access using current account
+        mode = os.stat(tcpdump).st_mode
+        if bool(mode & S_ISUID) is True:
+            log.error("Tcpdump is not accessible from this user, "
+                      "network capture aborted")
+            return False
 
         pargs = [
             tcpdump, "-U", "-q", "-s", "0", "-n",
@@ -55,28 +55,22 @@ class Sniffer(Auxiliary):
             pargs.extend(["-Z", user])
 
         pargs.extend(["-w", file_path])
-        pargs.extend(["host", self.machine.ip])
+        pargs.extend(["net", self.machine.ip])
 
         if self.task.options.get("sniffer.debug") != "1":
             # Do not capture Agent traffic.
             pargs.extend([
                 "and", "not", "(",
-                "dst", "host", self.machine.ip, "and",
-                "dst", "port", "%s" % CUCKOO_GUEST_PORT,
-                ")", "and", "not", "(",
-                "src", "host", self.machine.ip, "and",
-                "src", "port", "%s" % CUCKOO_GUEST_PORT,
+                "net", self.machine.ip, "and",
+                "port", "%s" % CUCKOO_GUEST_PORT,
                 ")",
             ])
 
             # Do not capture ResultServer traffic.
             pargs.extend([
                 "and", "not", "(",
-                "dst", "host", self.machine.resultserver_ip, "and",
-                "dst", "port", "%s" % self.machine.resultserver_port,
-                ")", "and", "not", "(",
-                "src", "host", self.machine.resultserver_ip, "and",
-                "src", "port", "%s" % self.machine.resultserver_port,
+                "net", self.machine.resultserver_ip, "and",
+                "port", "%s" % self.machine.resultserver_port,
                 ")",
             ])
 
