@@ -175,8 +175,13 @@ into deep modifications in the operating system as well as detect the presence
 of rootkit technology that escaped the monitoring domain of Cuckoo's analyzer.
 
 In order to function properly, Cuckoo requires at least version 2.3 of
-Volatility, but recommends the latest version, Volatility 2.5. You can
+Volatility, but recommends the latest version, Volatility 2.6. You can
 download it from their `official repository`_.
+
+Volatility documentation recommends installing the `pycrypto` package, but
+the newer `pycryptodome` fixes some vulnerabilities in the origional and is a
+drop in replacement. Please see `official documentation`_.
+.. _official documentation: https://www.pycryptodome.org/en/latest/
 
 See the volatility documentation for detailed instructions on how to install it.
 
@@ -192,7 +197,7 @@ installed. On Ubuntu/Debian-like systems this may be done as follows::
 
 If ``SWIG`` is present on the system one may install ``M2Crypto`` as follows::
 
-    $ sudo pip install m2crypto==0.24.0
+    $ sudo pip install m2crypto==0.35.2
 
 .. _SWIG: http://www.swig.org/
 

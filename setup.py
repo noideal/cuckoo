@@ -204,7 +204,7 @@ do_setup(
         "jsbeautifier==1.6.2",
         "oletools==0.51",
         "peepdf>=0.4.2, <0.5",
-        "pefile2==1.2.11",
+        "pefile>=2019.4.18",
         "pillow==3.2",
         "pyelftools==0.24",
         "pyguacamole==0.6",
