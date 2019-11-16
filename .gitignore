@@ -17,6 +17,7 @@ docs/book/_build/
 .idea/
 .project
 .pydevproject
+.vscode
 
 # Python package stuff
 .eggs/
