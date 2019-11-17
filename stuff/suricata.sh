@@ -51,7 +51,3 @@ chown -R root:cuckoo /var/run/suricata
 chmod -R 775 /var/run/suricata
 
 suricata -c /etc/suricata/suricata-cuckoo.yaml --unix-socket=/opt/cuckoo/cuckoo.socket -k none -l /var/tmp -D
-
-while [ ! -e /opt/cuckoo/cuckoo.socket ]; do
-    sleep 1
-done

@@ -105,6 +105,8 @@ class Suricata(Processing):
             "-k", "none",
             "-l", self.suricata_path,
             "-r", self.pcap_path,
+            "--runmode", "autofp"
+            # "-s", "../community/rules/community.rules"    TODO: ? could be fun?
         ]
 
         try:
@@ -205,13 +207,14 @@ class Suricata(Processing):
 
         # Index all the available files.
         files_dir = os.path.join(self.suricata_path, self.files_dir)
+        # for root, subdirs, files in os.walk(rootdir):     TODO: Walk directory rather than just look for files in root
         if not os.path.exists(files_dir):
             log.warning("Suricata files dir is not available. Maybe you forgot to enable Suricata file-store ?")
             return
 
-        for filename in os.listdir(files_dir):
+        for filename in os.listdir(files_dir):      # TODO: should be able to build path from log. may not need this
             filepath = os.path.join(files_dir, filename)
-            files[Files.md5_file(filepath)] = filepath
+            files[Files.sha_file(filepath)] = filepath
 
         for line in open(files_log, "rb"):
             event = json.loads(line)
@@ -221,15 +224,17 @@ class Suricata(Processing):
             # neither?) So take care of these situations.
             if "id" in event:
                 filepath = os.path.join(files_dir, "file.%s" % event["id"])
-            elif "md5" in event:
+            elif "sha256" in event:                        # default for suricata is now sha256
+                filepath = files.get(event["sha256"])
+            elif "md5" in event:                           # Legacy support for v1 file-store?
                 filepath = files.get(event["md5"])
             else:
                 filepath = None
 
             if not filepath or not os.path.isfile(filepath):
                 log.warning(
-                    "Suricata dropped file with id=%s and md5=%s not found, "
-                    "skipping it..", event.get("id"), event.get("md5")
+                    "Suricata dropped file with id=%s and sha256=%s not found, "
+                    "skipping it..", event.get("id"), event.get("sha256")
                 )
                 continue
 
@@ -243,7 +248,7 @@ class Suricata(Processing):
                 "filename": os.path.basename(event["filename"]),
                 "hostname": event.get("http_host"),
                 "uri": event.get("http_uri"),
-                "md5": Files.md5_file(filepath),
+                "sha256": Files.sha_file(filepath),
                 "sha1": Files.sha1_file(filepath),
                 "magic": event.get("magic"),
                 "referer": referer,
@@ -263,7 +268,7 @@ class Suricata(Processing):
         self.config_path = self.options.get("conf", "/etc/suricata/suricata.yaml")
         self.eve_log = self.options.get("eve_log", "eve.json")
         self.files_log = self.options.get("files_log", "files-json.log")
-        self.files_dir = self.options.get("files_dir", "files")
+        self.files_dir = self.options.get("files_dir", "filestore")         # v2 files module   TODO: fix parse_files
 
         # Determines whether we're in socket more or binary mode.
         self.socket = self.options.get("socket")
