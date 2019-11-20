@@ -228,16 +228,16 @@ do_setup(
         ],
         ":sys_platform == 'linux2'": [
             "requests[security]==2.13.0",
-            "scapy==2.4.3",
+            "scapy==2.3.2",
         ],
         "distributed": [
-            "psycopg2==2.8.4",
+            "psycopg2==2.6.2",
         ],
         "postgresql": [
-            "psycopg2==2.8.4",
+            "psycopg2==2.6.2",
         ],
         "weasyprint": [
-            "weasyprint==0.42.3",
+            "weasyprint==0.36",
         ],
     },
 )
