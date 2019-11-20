@@ -221,23 +221,23 @@ do_setup(
     ],
     extras_require={
         ":sys_platform == 'win32'": [
-            "requests==2.13.0",
+            "requests==2.22.0",
         ],
         ":sys_platform == 'darwin'": [
-            "requests==2.13.0",
+            "requests==2.22.0",
         ],
         ":sys_platform == 'linux2'": [
-            "requests[security]==2.13.0",
-            "scapy==2.3.2",
+            "requests[security]==2.22.0",
+            "scapy==2.4.3",
         ],
         "distributed": [
-            "psycopg2==2.6.2",
+            "psycopg2==2.8.4",
         ],
         "postgresql": [
-            "psycopg2==2.6.2",
+            "psycopg2==2.8.4",
         ],
         "weasyprint": [
-            "weasyprint==0.36",
+            "weasyprint==0.42.3",
         ],
     },
 )
