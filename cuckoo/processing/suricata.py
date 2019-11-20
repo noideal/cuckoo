@@ -105,10 +105,10 @@ class Suricata(Processing):
             "-k", "none",
             "-l", self.suricata_path,
             "-r", self.pcap_path,
-            "--runmode", "autofp"   # autofp for pcap file analysis
-            # "-s", "../community/rules/community.rules"    # TODO: ? could be fun?
-            "--user=cuckoo"        # force cuckoo user/g rather than require in yaml OR add to cuckoo conf?
-            "--group=cuckoo"
+            "--runmode", "autofp",   # autofp for pcap file analysis
+            # "-s", "../community/rules/community.rules",    # TODO: ? could be fun?
+            "--user=cuckoo",        # force cuckoo user/g rather than require in yaml OR add to cuckoo conf?
+            "--group=cuckoo",
         ]
 
         try:
