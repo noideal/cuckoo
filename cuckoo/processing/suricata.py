@@ -105,8 +105,10 @@ class Suricata(Processing):
             "-k", "none",
             "-l", self.suricata_path,
             "-r", self.pcap_path,
-            "--runmode", "autofp"
-            # "-s", "../community/rules/community.rules"    TODO: ? could be fun?
+            "--runmode", "autofp"   # autofp for pcap file analysis
+            # "-s", "../community/rules/community.rules"    # TODO: ? could be fun?
+            "--user=cuckoo"        # force cuckoo user/g rather than require in yaml OR add to cuckoo conf?
+            "--group=cuckoo"
         ]
 
         try:
@@ -198,7 +200,7 @@ class Suricata(Processing):
 
     def parse_files(self):
         """Parse the files-json.log file and its associated files."""
-        files_log = os.path.join(self.suricata_path, self.files_log)
+        files_log = os.path.join(self.suricata_path, self.files_log)    # maybe better to build from eve-log?
         if not os.path.isfile(files_log):
             log.warning("Unable to find the files-json.log log file")
             return

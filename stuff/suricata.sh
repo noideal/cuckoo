@@ -13,13 +13,14 @@
 # In /etc/default/suricata, set RUN to "no".
 #
 # In /etc/suricata/suricata-cuckoo.yaml apply the following changes;
-# * Set "unix-command.enabled" to "yes".
-# * Set "unix-command.filename" to "cuckoo.socket".
-# * Set "outputs.eve-log.enabled" to "yes".
+# * Set "unix-command.enabled" to "yes"
+# * Set "unix-command.filename" to "cuckoo.socket"
+# * Set "outputs.eve-log.enabled" to "yes"
 # * Set "run-as.user to "your cuckoo user"
 # * Set "run-as.group to "your cuckoo user group"
-# * Set "default-rule-path" to "/etc/suricata/rules/"
+# * Set "default-rule-path" to "/etc/suricata/rules/"    # REQUIRED default is /var
 # * TODO More items.
+#
 # $ sudo suricata-update -c /etc/suricata/suricata-cuckoo.yaml -o /etc/suricata/rules
 #
 # Add "@reboot /opt/cuckoo/utils/suricata.sh" to the root crontab.
@@ -46,8 +47,8 @@ if [ "$SURICATA" -eq 0 ]; then
 fi
 
 # Shouldn't need this anymore with change to the socket/rules/log paths and drop permission
-mkdir -p /var/run/suricata
-chown -R root:cuckoo /var/run/suricata
-chmod -R 775 /var/run/suricata
+# mkdir -p /var/run/suricata
+# chown -R root:cuckoo /var/run/suricata
+# chmod -R 775 /var/run/suricata
 
 suricata -c /etc/suricata/suricata-cuckoo.yaml --unix-socket=/opt/cuckoo/cuckoo.socket -k none -l /var/tmp -D
